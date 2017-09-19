@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css">
+
+
+</head>
+
+<body>
+    <div class="menu">
+        <div class="container">
+            <div class="row">
+                <div>Free Code Camp</div>
+            </div>
+            <div class="row">
+                <div>Weather App</div>
+            </div>
+            <div class="row">
+                <div id="data"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var response = "https://fcc-weather-api.glitch.me/api/current?lat=" + latitude + "&lon=" + longitude;
+                $.getJSON(response, function (json) {
+                    var html = "";
+                    var temperatura = json.main.temp;
+                    var tipo = "C";
+                    html = json.name + ", " + json.sys.country + "<br>" +
+                        "<span>" + temperatura + "</span>" + " º<a href='#'>C</a>" + "<br>" +
+                        json.weather[0].main + "<br>" +
+                        "<img src='" + json.weather[0].icon + "'>";
+                    $("#data").html(html);
+                    $("a").on("click", function () {
+                        var tipo = $(this).text();
+                        if (tipo === "C") {
+                            var t = $("span").text();
+                            var tempF = Math.round((9 / 5 * t) + 32);
+                            $("span").text(tempF);
+                            $(this).text("F");
+                        } else {
+                            var t = $("span").text();
+                            var tempC = Math.round(5 / 9 * (t - 32));
+                            $("span").text(tempC);
+                            $(this).text("C");
+                        }
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
